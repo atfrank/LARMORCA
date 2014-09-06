@@ -1,6 +1,6 @@
 # LarmorCa: Protein Ca-based Chemical Shift Predictor
  
-- Currently predicts 1H, 13C and 15N RNA chemical shifts
+- Predicts Backbone Protein (HN, N, C, HA, CA, CB) RNA chemical shifts
 
 ## Install
 ```shell
