@@ -1,22 +1,22 @@
-# LarmorD: A Distance-Based Chemical Shift Predictor
+# LarmorCa: Protein Ca-based Chemical Shift Predictor
  
 - Currently predicts 1H, 13C and 15N RNA chemical shifts
 
 ## Install
 ```shell
-$ cd /path/to/LarmorD/
+$ cd /path/to/LarmorCa/
 $ make clean
 $ make 
 ```
 
 ## Usage manual
 ```shell
-$ bin/larmor_rna_d -h
-Usage: larmor_rna_d [-options] <PDBfile>
+$ bin/larmorca -h
+Usage: larmorca [-options] <PDBfile>
 
 Options:
          -csfile : chemical shifts list file (string)
-         -parmfile : LarmorD parameter file (string)
+         -parmfile : LarmorCa parameter file (string)
          -trj : trajectory file (string)
          -skip : skip rate for reading trajectory (integer)
          -start : frame at which to start reading trajectory (integer)
@@ -28,9 +28,9 @@ Options:
 ## Examples
 ```shell
 $ # predict chemical shifts from a coordinate file 
-$ bin/larmor_rna_d -csfile tests/cs.dat -identification 1SCL tests/struct.pdb (PDB format)
+$ bin/larmorca -csfile tests/cs.dat -identification 1SCL tests/struct.pdb (PDB format)
 $ # predict chemical shifts from a trajectory file (DCD format) 
-$ bin/larmor_rna_d -csfile tests/cs.dat -identification 1SCL -trj tests/pool.dcd tests/struct.pdb
+$ bin/larmorca -csfile tests/cs.dat -identification 1SCL -trj tests/pool.dcd tests/struct.pdb
 ```
 
 ## output
@@ -39,7 +39,7 @@ _processor, trajectory-frame, residue-number, residue-name, nucleus, predicted-s
 
 ### example
 ```shell
-$ bin/larmor_rna_d -csfile tests/cs.dat -identification 1SCL tests/struct.pdb
+$ bin/larmorca -csfile tests/cs.dat -identification 1SCL tests/struct.pdb
   
   0 1 1 GUA C4' 83.3042 80.854 83.1 1SCL
   0 1 1 GUA H4' 4.46852 4.533 4 1SCL
