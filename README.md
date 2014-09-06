@@ -1,20 +1,22 @@
-# CASA: Cα-based Solvent Accessibilities
-  
-- Predicts residue solvent accessibilities based on Cα coordinates using random decision trees.
+# LarmorD: A Distance-Based Chemical Shift Predictor
+ 
+- Currently predicts 1H, 13C and 15N RNA chemical shifts
 
 ## Install
 ```shell
-$ cd /path/to/CASA/
+$ cd /path/to/LarmorD/
 $ make clean
 $ make 
 ```
 
 ## Usage manual
 ```shell
-$ bin/casa -h
-Usage: casa [-options] <PDBfile>
+$ bin/larmor_rna_d -h
+Usage: larmor_rna_d [-options] <PDBfile>
 
 Options:
+         -csfile : chemical shifts list file (string)
+         -parmfile : LarmorD parameter file (string)
          -trj : trajectory file (string)
          -skip : skip rate for reading trajectory (integer)
          -start : frame at which to start reading trajectory (integer)
@@ -25,161 +27,147 @@ Options:
 
 ## Examples
 ```shell
-$ # predict solvent accessibilities from a coordinate file 
-$ bin/casa tests/file.pdb (PDB format)
-$
+$ # predict chemical shifts from a coordinate file 
+$ bin/larmor_rna_d -csfile tests/cs.dat -identification 1SCL tests/struct.pdb (PDB format)
 $ # predict chemical shifts from a trajectory file (DCD format) 
-$ bin/casa -trj tests/file.dcd tests/file.pdb
+$ bin/larmor_rna_d -csfile tests/cs.dat -identification 1SCL -trj tests/pool.dcd tests/struct.pdb
 ```
 
-## Output
+## output
 ### format
-_trajectory-frame, residue-number, residue-name, sasa, id-tag_
+_processor, trajectory-frame, residue-number, residue-name, nucleus, predicted-shifts, measured-shifts, random-coil-shifts, id-tag_
 
 ### example
 ```shell
-$ bin/casa -identification IDtag tests/file.pdb
-1 1 GLY 122.846  IDtag
-1 2 ARG 149.313  IDtag
-1 3 GLY 72.4997  IDtag
-1 4 LEU 136.496  IDtag
-1 5 GLY 62.3456  IDtag
-1 6 PRO 44.3154  IDtag
-1 7 LEU 44.8277  IDtag
-1 8 GLN 71.9106  IDtag
-1 9 ILE 21.4488  IDtag
-1 10 TRP 17.9812  IDtag
-1 11 GLN 55.4005  IDtag
-1 12 THR 36.2837  IDtag
-1 13 ASP 35.8978  IDtag
-1 14 PHE 39.6585  IDtag
-1 15 THR 34.9928  IDtag
-1 16 LEU 32.4873  IDtag
-1 17 GLU 58.6507  IDtag
-1 18 PRO 26.4722  IDtag
-1 19 ARG 85.2815  IDtag
-1 20 MET 16.2541  IDtag
-1 21 ALA 24.2885  IDtag
-1 22 PRO 51.0041  IDtag
-1 23 ARG 62.8826  IDtag
-1 24 SER 10.2901  IDtag
-1 25 TRP 14.1995  IDtag
-1 26 LEU 4.68346  IDtag
-1 27 ALA 4.64075  IDtag
-1 28 VAL 5.02193  IDtag
-1 29 THR 15.2532  IDtag
-1 30 VAL 5.16215  IDtag
-1 31 ASP 17.4655  IDtag
-1 32 THR 20.1837  IDtag
-1 33 ALA 29.7804  IDtag
-1 34 SER 73.6202  IDtag
-1 35 SER 64.7972  IDtag
-1 36 ALA 18.918  IDtag
-1 37 ILE 18.4492  IDtag
-1 38 VAL 13.0663  IDtag
-1 39 VAL 17.029  IDtag
-1 40 THR 19.3027  IDtag
-1 41 GLN 56.7396  IDtag
-1 42 HIS 41.1943  IDtag
-1 43 GLY 27.3733  IDtag
-1 44 ARG 92.6463  IDtag
-1 45 VAL 26.2965  IDtag
-1 46 THR 30.85  IDtag
-1 47 SER 25.1629  IDtag
-1 48 VAL 49.4112  IDtag
-1 49 ALA 10.9413  IDtag
-1 50 ALA 4.48318  IDtag
-1 51 GLN 46.5995  IDtag
-1 52 HIS 80.4594  IDtag
-1 53 HIS 41.4464  IDtag
-1 54 TRP 29.2906  IDtag
-1 55 ALA 51.4916  IDtag
-1 56 THR 47.8386  IDtag
-1 57 ALA 6.27355  IDtag
-1 58 ILE 20.5302  IDtag
-1 59 ALA 78.8612  IDtag
-1 60 VAL 56.856  IDtag
-1 61 LEU 47.8338  IDtag
-1 62 GLY 48.2455  IDtag
-1 63 ARG 123.272  IDtag
-1 64 PRO 18.3451  IDtag
-1 65 LYS 82.1203  IDtag
-1 66 ALA 5.84372  IDtag
-1 67 ILE 4.05915  IDtag
-1 68 LYS 48.4715  IDtag
-1 69 THR 12.7724  IDtag
-1 70 ASP 38.6929  IDtag
-1 71 ASN 56.2789  IDtag
-1 72 GLY 45.2089  IDtag
-1 73 SER 56.1783  IDtag
-1 74 CYS 15.419  IDtag
-1 75 PHE 16.0736  IDtag
-1 76 THR 63.5141  IDtag
-1 77 SER 24.4761  IDtag
-1 78 LYS 151.046  IDtag
-1 79 SER 43.9767  IDtag
-1 80 THR 19.8881  IDtag
-1 81 ARG 61.1255  IDtag
-1 82 GLU 88.7863  IDtag
-1 83 TRP 19.6943  IDtag
-1 84 LEU 9.76135  IDtag
-1 85 ALA 48.5693  IDtag
-1 86 ARG 155.987  IDtag
-1 87 TRP 68.4943  IDtag
-1 88 GLY 50.7  IDtag
-1 89 ILE 26.8913  IDtag
-1 90 ALA 27.7666  IDtag
-1 91 HIS 67.5432  IDtag
-1 92 THR 40.624  IDtag
-1 93 THR 40.6842  IDtag
-1 94 GLY 54.7335  IDtag
-1 95 ILE 110.908  IDtag
-1 96 PRO 121.547  IDtag
-1 97 GLY 71.9464  IDtag
-1 98 GLN 69.2684  IDtag
-1 99 ALA 71.2321  IDtag
-1 100 MET 40.4118  IDtag
-1 101 VAL 12.5065  IDtag
-1 102 GLU 79.3639  IDtag
-1 103 ARG 106.515  IDtag
-1 104 ALA 11.4834  IDtag
-1 105 ASN 21.7986  IDtag
-1 106 ARG 114.12  IDtag
-1 107 LEU 23.4228  IDtag
-1 108 LEU 8.6411  IDtag
-1 109 LYS 61.658  IDtag
-1 110 ASP 64.6166  IDtag
-1 111 LYS 56.622  IDtag
-1 112 ILE 6.25301  IDtag
-1 113 ARG 75.7197  IDtag
-1 114 VAL 58.756  IDtag
-1 115 LEU 8.8543  IDtag
-1 116 ALA 8.39724  IDtag
-1 117 GLU 84.7471  IDtag
-1 118 GLY 62.5702  IDtag
-1 119 ASP 91.8669  IDtag
-1 120 GLY 60.2122  IDtag
-1 121 PHE 52.5697  IDtag
-1 122 MET 57.7558  IDtag
-1 123 LYS 109.824  IDtag
-1 124 ARG 70.1557  IDtag
-1 125 ILE 20.3269  IDtag
-1 126 PRO 58.378  IDtag
-1 127 THR 70.9881  IDtag
-1 128 SER 109.852  IDtag
-1 129 LYS 103.318  IDtag
-1 130 GLN 48.5196  IDtag
-1 131 GLY 48.0237  IDtag
-1 132 GLU 92.7902  IDtag
-1 133 LEU 15.1281  IDtag
-1 134 LEU 9.87831  IDtag
-1 135 ALA 27.3036  IDtag
-1 136 LYS 84.6839  IDtag
-1 137 ALA 8.77687  IDtag
-1 138 MET 11.9091  IDtag
-1 139 TYR 67.4171  IDtag
-1 140 ALA 62.0968  IDtag
-1 141 LEU 41.4506  IDtag
-1 142 ASN 40.7067  IDtag
-1 143 HIS 144.485  IDtag
+$ bin/larmor_rna_d -csfile tests/cs.dat -identification 1SCL tests/struct.pdb
+  
+  0 1 1 GUA C4' 83.3042 80.854 83.1 1SCL
+  0 1 1 GUA H4' 4.46852 4.533 4 1SCL
+  0 1 1 GUA C1' 91.9503 89.246 93.1 1SCL
+  0 1 1 GUA H1' 5.73867 5.826 5.05 1SCL
+  0 1 1 GUA C8 139.384 136.761 137.9 1SCL
+  0 1 1 GUA H8 7.88394 8.154 7.69 1SCL
+  0 1 1 GUA C3' 74.5986 72.559 73.9 1SCL
+  0 1 1 GUA H3' 4.58187 4.927 4.14 1SCL
+  0 1 1 GUA C2' 75.7191 72.732 76.3 1SCL
+  0 1 1 GUA H2' 4.60956 4.467 4.02 1SCL
+  0 1 2 GUA C4' 82.4796 79.711 83.1 1SCL
+  0 1 2 GUA H4' 4.4962 4.548 4 1SCL
+  0 1 2 GUA C1' 92.4939 90.258 93.1 1SCL
+  0 1 2 GUA H1' 5.7539 5.932 5.05 1SCL
+  0 1 2 GUA C8 137.111 134.495 137.9 1SCL
+  0 1 2 GUA H8 7.4922 7.556 7.69 1SCL
+  0 1 2 GUA C3' 73.1824 70.475 73.9 1SCL
+  0 1 2 GUA H3' 4.57466 4.559 4.14 1SCL
+  0 1 2 GUA C2' 75.5983 72.954 76.3 1SCL
+  0 1 2 GUA H2' 4.67613 4.718 4.02 1SCL
+  ...
+```
+
+## Chemical shift list file
+### file format
+_residue-name, residue-number, nucleus, measured-shifts, error_
+
+### example
+```shell
+$ head -10 tests/cs.dat
+  
+  CYT 6 C1' 91.438 0.00
+  URA 7 C1' 92.388 0.00
+  CYT 8 C1' 89.297 0.00
+  ADE 9 C1' 85.504 0.00
+  GUA 10 C1' 81.3 0.00
+  GUA 1 C1' 89.246 0.00
+  GUA 2 C1' 90.258 0.00
+  GUA 3 C1' 90.657 0.00
+  URA 4 C1' 90.835 0.00
+  GUA 5 C1' 89.925 0.00
+  ...
+```
+
+## LarmorD parameter file
+### file format
+_nucleus, neighbor-residue-name, neighbor-atom-name, alpha_
+
+### example for H5''
+```shell
+$ head -68 data/parameters.txt
+
+  H5'' GUA C1' 3.67815480447
+  H5'' GUA C2' 1.63100734262
+  H5'' GUA C3' 2.89281770448
+  H5'' GUA C4' 2.3548429102
+  H5'' GUA C5' 0.0321335101989
+  H5'' GUA P -0.171617457218
+  H5'' GUA O5' 1.57702037737
+  H5'' GUA O3' 0.326168827858
+  H5'' GUA C2 -6.64414148375
+  H5'' GUA C4 -14.2514277865
+  H5'' GUA C5 -18.4752206521
+  H5'' GUA C6 -23.3660033205
+  H5'' GUA C8 11.2256815971
+  H5'' GUA N1 -15.0357687755
+  H5'' GUA N2 18.8071249973
+  H5'' GUA N3 7.49438758708
+  H5'' GUA N7 6.47382380489
+  H5'' GUA N9 -1.33876233081
+  H5'' GUA O6 13.3592994749
+  H5'' ADE C1' -6.87501637071
+  H5'' ADE C2' -0.125715293229
+  H5'' ADE C3' 0.934354550638
+  H5'' ADE C4' 0.256912097145
+  H5'' ADE C5' 0.571155032105
+  H5'' ADE P -0.433798841887
+  H5'' ADE O5' 1.5556382895
+  H5'' ADE O3' 0.852536186953
+  H5'' ADE C2 19.465835991
+  H5'' ADE C4 -2.63457000853
+  H5'' ADE C5 -6.20431462114
+  H5'' ADE C6 -5.52564589385
+  H5'' ADE C8 3.72779586352
+  H5'' ADE N1 8.97415774656
+  H5'' ADE N3 -3.65500648528
+  H5'' ADE N6 -21.6733704635
+  H5'' ADE N7 0.39668878159
+  H5'' ADE N9 1.89834133117
+  H5'' URA C1' -7.8361401694
+  H5'' URA C2' -1.05475191362
+  H5'' URA C3' -1.23351633568
+  H5'' URA C4' 4.8561240664
+  H5'' URA C5' 0.0
+  H5'' URA P 1.86617611577
+  H5'' URA O5' 1.01063675972
+  H5'' URA O3' 0.949438715561
+  H5'' URA C2 3.44987727435
+  H5'' URA C4 -7.50237209988
+  H5'' URA C5 -14.857005414
+  H5'' URA C6 3.44656331225
+  H5'' URA N1 2.71399930928
+  H5'' URA N3 19.9073925365
+  H5'' URA O4 23.4150612805
+  H5'' CYT C1' 0.706640452452
+  H5'' CYT C2' 0.166171606825
+  H5'' CYT C3' -3.1035073294
+  H5'' CYT C4' -1.57037444807
+  H5'' CYT C5' 1.32626298398
+  H5'' CYT P -0.440649244862
+  H5'' CYT O5' -2.63138895134
+  H5'' CYT O3' 1.92397549643
+  H5'' CYT C2 8.20045630532
+  H5'' CYT C4 1.29679400155
+  H5'' CYT C5 4.77736668512
+  H5'' CYT C6 1.05351000601
+  H5'' CYT N1 2.78643038779
+  H5'' CYT N3 6.38091065052
+  H5'' CYT N4 -12.0144974986
+  H5'' CYT O2 -2.71778957123
+  ...
+```
+
+## Limitations
+Currently, LarmorD does not predict chemical shifts for unprotonated 13C and 15N nuclei.
+
+## Licence
+```
+...
 ```
