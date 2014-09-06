@@ -27,8 +27,8 @@ along with MoleTools.  If not, see <http://www.gnu.org/licenses/>.
 #include "Constants.hpp"
 #include "DTree.hpp"
 #include "PCASSO.hpp"
-#include "CASAP.hpp"
-#include "CASA.hpp"
+#include "LARMORCAP.hpp"
+#include "LARMORCA.hpp"
 #include "Misc.hpp"
 
 #include <fstream>
@@ -69,18 +69,63 @@ AnalyzePcasso::AnalyzePcasso (std::string delim){
   }
 }
 
-AnalyzeCasa::AnalyzeCasa (std::string delim){
+AnalyzeLarmorca::AnalyzeLarmorca (std::string delim){
   unsigned int ntree;
-  /* t1 */
+  /* Tree - Nucleus
+  t1 - H
+  t2 - HA
+  t3 - CA
+  t4 - C
+  t5 - CB
+  t6 - N 
+  */
   std::vector<std::string> tokens;
+
   t1.clear();
-  ntree=CASAP::getNTree();
+  t2.clear();
+  t3.clear();
+  t4.clear();
+  t5.clear();
+  t6.clear();
+  
+  ntree=LARMORCAP::getNTree();
   t1.resize(ntree);
+  t2.resize(ntree);
+  t3.resize(ntree);
+  t4.resize(ntree);
+  t5.resize(ntree);
+  t6.resize(ntree);
   
   for (unsigned int i=0; i< ntree; i++){
     t1.at(i)=new DTree;
-    Misc::splitStr(CASAP::getTree(i), " \t", tokens, false);
+    Misc::splitStr(LARMORCAP::getTree(i, "H"), " \t", tokens, false);
     t1.at(i)->genDTree(tokens, delim);
+    //tokens.clear();
+
+    t2.at(i)=new DTree;
+    Misc::splitStr(LARMORCAP::getTree(i, "HA"), " \t", tokens, false);
+    t2.at(i)->genDTree(tokens, delim);
+    //tokens.clear();
+
+    t3.at(i)=new DTree;
+    Misc::splitStr(LARMORCAP::getTree(i, "CA"), " \t", tokens, false);
+    t3.at(i)->genDTree(tokens, delim);
+    //tokens.clear();
+
+    t4.at(i)=new DTree;
+    Misc::splitStr(LARMORCAP::getTree(i, "C"), " \t", tokens, false);
+    t4.at(i)->genDTree(tokens, delim);
+    //tokens.clear();
+
+    t5.at(i)=new DTree;
+    Misc::splitStr(LARMORCAP::getTree(i, "CB"), " \t", tokens, false);
+    t5.at(i)->genDTree(tokens, delim);
+    //tokens.clear();
+    
+    t6.at(i)=new DTree;
+    Misc::splitStr(LARMORCAP::getTree(i, "N"), " \t", tokens, false);
+    t6.at(i)->genDTree(tokens, delim);
+    //tokens.clear();
   }
 }
 
@@ -400,7 +445,7 @@ void AnalyzePcasso::preAnalysis(Molecule* molin, std::string fin){
   //Resize FData in Analyze::pcasso
 }
 
-void AnalyzeCasa::preAnalysis(Molecule* molin){
+void AnalyzeLarmorca::preAnalysis(Molecule* molin, std::string fin){
   this->setupMolSel(molin);
 }
 
@@ -519,58 +564,286 @@ void AnalyzePcasso::runAnalysis(){
 
 }
 
-
-void AnalyzeCasa::runAnalysis(){
-  // do nothing
+void AnalyzeLarmorca::runAnalysis(){
 }
 
-
-void AnalyzeCasa::runAnalysisTest(unsigned int frame, std::string identification){
+void AnalyzeLarmorca::runAnalysisTest(unsigned int frame, std::string fchemshift, std::string identification, bool analyzeError, bool printError,std::string errorType){
   Molecule *mol;
-  CASA *casa;
+  Molecule *mol1;
+  Molecule *mol2;
+  Molecule *mol3;
+  Molecule *mol4;
+  Molecule *mol5;
+  Molecule *mol6;
+  
   std::stringstream fout;
+  std::ofstream pdbout1;
+  std::ofstream pdbout2;
+  std::ofstream pdbout3;
+  std::ofstream pdbout4;
+  std::ofstream pdbout5;
+  std::ofstream pdbout6;
+  
+  LARMORCA *larm;
   std::vector<std::vector<double> > &feat=this->getFDataVec();
-  double sasaPred;
+  double p1;
+  double p2;
+  double p3;
+  double p4;
+  double p5;
+  double p6;
+  std::vector<double> e1;
+  std::vector<double> e2;
+  std::vector<double> e3;
+  std::vector<double> e4;
+  std::vector<double> e5;
+  std::vector<double> e6;
+  
+  double expcs;
+  double predcs;
+  double randcs;
+  double errorW;
+  double error;
   unsigned int natom;
   std::stringstream resid;
   unsigned int ntree;
   std::string resname;
   std::string key;
-  mol = NULL;
-  casa=NULL;
-  mol = this->getMol(0);
-  casa = new CASA(mol);
-  /* */
-
   
+
+  mol = NULL;
+  larm = NULL;
+  errorW=1.0;
+  if (analyzeError == true){
+    mol1 = NULL;
+    mol2 = NULL;
+    mol3 = NULL;
+    mol4 = NULL;
+    mol5 = NULL;
+    mol6 = NULL;
+    
+    fout << identification << "_error_H.pdb";
+    pdbout1.open(fout.str().c_str(), std::ios::out);
+    fout.str(std::string());
+
+    fout << identification << "_error_HA.pdb";
+    pdbout2.open(fout.str().c_str(), std::ios::out);
+    fout.str(std::string());
+
+    fout << identification << "_error_CA.pdb";
+    pdbout3.open(fout.str().c_str(), std::ios::out);
+    fout.str(std::string());
+
+    fout << identification << "_error_C.pdb";
+    pdbout4.open(fout.str().c_str(), std::ios::out);
+    fout.str(std::string());
+
+    fout << identification << "_error_CB.pdb";
+    pdbout5.open(fout.str().c_str(), std::ios::out);
+    fout.str(std::string());
+
+    fout << identification << "_error_N.pdb";
+    pdbout6.open(fout.str().c_str(), std::ios::out);
+    fout.str(std::string());
+  }
+
+  e1.clear();
+  e2.clear();
+  e3.clear();
+  e4.clear();
+  e5.clear();
+  e6.clear();
+  
+  
+
+  mol = this->getMol(0);
+
   /* rename HID, HIE => HIS */
   mol->renameRes("HID","HIS");
   mol->renameRes("HIE","HIS");
-  mol->renameRes("HIP","HIS");
   mol->renameRes("HSD","HIS");
-  mol->renameRes("HSP","HIS");
-  mol->renameRes("HSE","HIS");
+
+  if (analyzeError == true){
+    mol1 = mol->clone();
+    mol2 = mol->clone();
+    mol3 = mol->clone();
+    mol4 = mol->clone();
+    mol5 = mol->clone();
+    mol6 = mol->clone();
+  }
   
   Analyze::pcasso(mol, this->getFDataVec()); //PCASSO features get stored in the second argument (a 2-D vector double)
+  larm = new LARMORCA(mol,fchemshift);
   natom=0;
-  ntree=CASAP::getNTree();
+  ntree=LARMORCAP::getNTree();
   for (unsigned int i=0; i< mol->getNAtomSelected(); i++){
+    p1=p2=p3=p4=p5=p6=0.0;
     resname = mol->getResidue(natom)->getResName();
     resid << mol->getResidue(natom)->getResId();
-    sasaPred=0.0;
-    feat[i].insert(feat[i].begin(),casa->getPolarity(resname));
-    feat[i].insert(feat[i].begin(),casa->getSASA(resname));
-    feat[i].insert(feat[i].begin(),casa->getRadius(resname));
-    feat[i].insert(feat[i].begin(),casa->getRefSASA(resname));
-    
+    feat[i].insert(feat[i].begin(),0.0);
     for (unsigned int j=0; j< ntree; j++){
-      sasaPred += atof(t1.at(j)->getDTreeClass(feat.at(i)).c_str());
+      feat[i].at(0) = larm->getRandomShift("H:"+resname); // NOTE: adding RandomCoil reference chemical shifts to the front of the feature vectors
+      p1 += atof(t1.at(j)->getDTreeClass(feat.at(i)).c_str());
+      
+      feat[i].at(0) = larm->getRandomShift("HA:"+resname);
+      p2 += atof(t2.at(j)->getDTreeClass(feat.at(i)).c_str());
+      
+      feat[i].at(0) = larm->getRandomShift("CA:"+resname);
+      p3 += atof(t3.at(j)->getDTreeClass(feat.at(i)).c_str());
+      
+      feat[i].at(0) = larm->getRandomShift("C:"+resname);
+      p4 += atof(t4.at(j)->getDTreeClass(feat.at(i)).c_str());
+      
+      feat[i].at(0) = larm->getRandomShift("CB:"+resname);
+      p5 += atof(t5.at(j)->getDTreeClass(feat.at(i)).c_str());
+      
+      feat[i].at(0) = larm->getRandomShift("N:"+resname);
+      p6 += atof(t6.at(j)->getDTreeClass(feat.at(i)).c_str());
     }
-    sasaPred /= ntree;
-    //std::cout << frame << " "  << resid.str() << " " << resname << " " << sasaPred + refSASA.at(resname) << " " << " " << identification << std::endl;
-    std::cout << frame << " "  << resid.str() << " " << resname << " " << sasaPred << " " << " " << identification << std::endl;
+    p1 /= ntree;
+    p2 /= ntree;
+    p3 /= ntree;
+    p4 /= ntree;
+    p5 /= ntree;
+    p6 /= ntree;
+
+    key = resid.str()+":H";
+    expcs = larm->getExperimentalCS(key);
+    randcs = larm->getRandomShift("H:"+resname);
+    predcs = p1;
+    if((randcs!=999.0) && (fchemshift.length() == 0 || expcs != 0.0)){
+      if (printError == false){
+        std::cout << frame << " "  << resid.str() << " H " << resname << " " << randcs << " " << predcs  << " " << expcs << " " << identification << std::endl;
+      } else if (errorType=="W1MAE" || errorType=="W1RMSE" ){
+        errorW = 1.0/larm->getMAE("H:"+resname);
+      } else if (errorType=="W2MAE" || errorType=="W2RMSE" ){
+        errorW = fabs(larm->getR("H:"+resname))/larm->getMAE("H:"+resname);
+      }
+      error = errorW*(expcs - predcs);
+      e1.push_back(error);
+      if (analyzeError == true){
+        mol1->getAtom(i)->setBFac(fabs(expcs - predcs));
+      }
+    }
+
+    key = resid.str()+":HA";
+    expcs = larm->getExperimentalCS(key);
+    randcs = larm->getRandomShift("HA:"+resname);
+    predcs = p2;
+    if((randcs!=999.0) && (fchemshift.length() == 0 || expcs != 0.0)){
+      if (printError == false){
+        std::cout << frame << " "  << resid.str() << " HA " << resname << " " << randcs << " " << predcs  << " " << expcs  << " " << identification << std::endl;
+      } else if (errorType=="W1MAE" || errorType=="W1RMSE" ){
+        errorW = 1.0/larm->getMAE("HA:"+resname);
+      } else if (errorType=="W2MAE" || errorType=="W2RMSE" ){
+        errorW = fabs(larm->getR("HA:"+resname))/larm->getMAE("HA:"+resname);
+      }
+      error = errorW*(expcs - predcs);
+      e2.push_back(error);
+      if (analyzeError == true){
+        mol2->getAtom(i)->setBFac(fabs(expcs - predcs));
+      }
+    }
+
+    key = resid.str()+":CA";
+    expcs = larm->getExperimentalCS(key);
+    randcs = larm->getRandomShift("CA:"+resname);
+    predcs = p3;
+    if((randcs!=999.0) && (fchemshift.length() == 0 || expcs != 0.0)){
+      if (printError == false){
+        std::cout << frame << " "  << resid.str() << " CA " << resname << " " << randcs << " " << predcs  << " " << expcs  << " " << identification << std::endl;
+      } else if (errorType=="W1MAE" || errorType=="W1RMSE" ){
+        errorW = 1.0/larm->getMAE("CA:"+resname);
+      } else if (errorType=="W2MAE" || errorType=="W2RMSE" ){
+        errorW = fabs(larm->getR("CA:"+resname))/larm->getMAE("CA:"+resname);
+      }
+      error = errorW*(expcs - predcs);
+      e3.push_back(error);
+      if (analyzeError == true){
+        mol3->getAtom(i)->setBFac(fabs(expcs - predcs));
+      }
+    }
+
+    key = resid.str()+":C";
+    expcs = larm->getExperimentalCS(key);
+    randcs = larm->getRandomShift("C:"+resname);
+    predcs = p4;
+    if((randcs!=999.0) && (fchemshift.length() == 0 || expcs != 0.0)){
+      if (printError == false){
+        std::cout << frame << " "  << resid.str() << " C " << resname << " " << randcs << " " << predcs  << " " << expcs <<  " " << identification << std::endl;
+      } else if (errorType=="W1MAE" || errorType=="W1RMSE" ){
+        errorW = 1.0/larm->getMAE("C:"+resname);
+      } else if (errorType=="W2MAE" || errorType=="W2RMSE" ){
+        errorW = fabs(larm->getR("C:"+resname))/larm->getMAE("C:"+resname);
+      }
+      error = errorW*(expcs - predcs);
+      e4.push_back(error);
+      if (analyzeError == true){
+        mol4->getAtom(i)->setBFac(fabs(expcs - predcs));
+      }
+    }
+
+    key = resid.str()+":CB";
+    expcs = larm->getExperimentalCS(key);
+    randcs = larm->getRandomShift("CB:"+resname);
+    predcs = p5;
+    if((randcs!=999.0) && (fchemshift.length() == 0 || expcs != 0.0)){
+      if (printError == false){
+        std::cout << frame << " "  << resid.str() << " CB " << resname << " " << randcs << " " << predcs  << " " << expcs <<  " " << identification << std::endl;
+      } else if (errorType=="W1MAE" || errorType=="W1RMSE" ){
+        errorW = 1.0/larm->getMAE("CB:"+resname);
+      } else if (errorType=="W2MAE" || errorType=="W2RMSE" ){
+        errorW = fabs(larm->getR("CB:"+resname))/larm->getMAE("CB:"+resname);
+      }
+      error = errorW*(expcs - predcs);
+      e5.push_back(error);
+      if (analyzeError == true){
+        mol5->getAtom(i)->setBFac(fabs(expcs - predcs));
+      }
+    }
+
+    key = resid.str()+":N";
+    expcs = larm->getExperimentalCS(key);
+    randcs = larm->getRandomShift("N:"+resname);
+    predcs = p6;
+    if((randcs!=999.0) && (fchemshift.length() == 0 || expcs != 0.0)){
+      if (printError == false){
+        std::cout << frame << " " << resid.str() << " N " << resname << " " << randcs << " " << predcs  << " " << expcs <<  " " << identification << std::endl;
+      } else if (errorType=="W1MAE" || errorType=="W1RMSE" ){
+        errorW = 1.0/larm->getMAE("N:"+resname);
+      } else if (errorType=="W2MAE" || errorType=="W2RMSE" ){
+        errorW = fabs(larm->getR("N:"+resname))/larm->getMAE("N:"+resname);
+      }
+      error = errorW*(expcs - predcs);
+      e6.push_back(error);
+      if (analyzeError == true){
+        mol6->getAtom(i)->setBFac(fabs(expcs - predcs));
+      }
+    }
     natom ++;
     resid.str("");
+  }
+  if (analyzeError == true){
+    pdbout1 << mol1->writePDB(true,false);
+    pdbout2 << mol2->writePDB(true,false);
+    pdbout3 << mol3->writePDB(true,false);
+    pdbout4 << mol4->writePDB(true,false);
+    pdbout5 << mol5->writePDB(true,false);
+    pdbout6 << mol6->writePDB(true,false);
+
+    pdbout1.close();
+    pdbout2.close();
+    pdbout3.close();
+    pdbout4.close();
+    pdbout5.close();
+    pdbout6.close();
+  }
+  if (printError == true){
+    if (errorType!="RMSE"){
+      std::cout << frame << " " <<  Misc::mae(e1) << " " << Misc::mae(e2) << " " << Misc::mae(e3)  << " " << Misc::mae(e4)  << " " << Misc::mae(e5)  << " " << Misc::mae(e6) << " " << Misc::mae(e1)+Misc::mae(e2)+Misc::mae(e3)+Misc::mae(e4)+Misc::mae(e5)+Misc::mae(e6) << " " << identification << std::endl;
+    } else {
+      std::cout << frame << " " <<  Misc::rmse(e1) << " " << Misc::rmse(e2) << " " << Misc::rmse(e3)  << " " << Misc::rmse(e4)  << " " << Misc::rmse(e5)  << " " << Misc::rmse(e6) << " " << Misc::rmse(e1)+Misc::rmse(e2)+Misc::rmse(e3)+Misc::rmse(e4)+Misc::rmse(e5)+Misc::rmse(e6) << " " << identification << std::endl;
+    }
   }
 }
 

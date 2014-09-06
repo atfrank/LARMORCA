@@ -29,6 +29,9 @@ Compiled Using: g++ larmorca.cpp -o larmorca -Wall -O3 -I$MoleTools/lib -lmoleto
 #include <iostream>
 #include <ctime>
 #include <fstream>
+#include <limits>
+#include <stdlib.h>
+
 
 void usage(){
   std::cerr << "Usages: Skipping unknown option"  << std::endl;
@@ -195,11 +198,9 @@ int main (int argc, char **argv){
         anin->runAnalysisTest(j+1,fchemshift,identification,analyzeError,printError,errorType);
         delete mol;
       }
-
       if (anin != NULL){
         delete anin;
       }
-
       return 0;
     }
 }

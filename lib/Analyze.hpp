@@ -149,14 +149,19 @@ class AnalyzePcasso: public Analyze {
     void postAnalysis();
 };
 
-class AnalyzeCasa: public Analyze {
+class AnalyzeLarmorca: public Analyze {
   private:
     std::vector<DTree *> t1;
+    std::vector<DTree *> t2;
+    std::vector<DTree *> t3;
+    std::vector<DTree *> t4;
+    std::vector<DTree *> t5;
+    std::vector<DTree *> t6;
   public:
-    AnalyzeCasa(std::string delim=":");
-    void preAnalysis(Molecule* molin);
+    AnalyzeLarmorca(std::string delim=":");
+    void preAnalysis(Molecule* molin, std::string fin="");
     void runAnalysis();
-    void runAnalysisTest(unsigned int frame=1, std::string identification="test");
+    void runAnalysisTest(unsigned int frame=1, std::string fchemshift="", std::string identification="test", bool analyzeError=false, bool printError=false, std::string errorType="RMSE");
 };
 
 

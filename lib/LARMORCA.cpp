@@ -21,7 +21,6 @@ along with MoleTools.  If not, see <http://www.gnu.org/licenses/>.
 
 //Code generated using: awk '{print "{\""$1":"$2":"$3"\","$4"},"}' larmorD_both.dat | tr '\n' ' '
 
-#include "LARMORD.hpp"
 #include "LARMORCA.hpp"
 #include "Molecule.hpp"
 #include "Misc.hpp"
