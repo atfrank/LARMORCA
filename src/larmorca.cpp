@@ -34,6 +34,12 @@ Compiled Using: g++ larmorca.cpp -o larmorca -Wall -O3 -I$MoleTools/lib -lmoleto
 
 
 void usage(){
+  std::cerr << " " << std::endl;
+  std::cerr << "====================================================" << std::endl;
+  std::cerr << "LARMORCa Chemical Shift Predictor v1.00" << std::endl;
+  std::cerr << "(c) 2014 Aaron T. Frank and University of Michigan." << std::endl;
+  std::cerr << "====================================================" << std::endl;
+  std::cerr << " " << std::endl;
   std::cerr << "Usages: Skipping unknown option"  << std::endl;
   std::cerr << "Usage:   larmorca [-options] <PDBfile>" << std::endl;
   std::cerr << "Options: [-csfile CSfile]" << std::endl;
@@ -41,8 +47,7 @@ void usage(){
   std::cerr << "         [-skip frames] [-start frame] [-stop frame]" << std::endl;  
   std::cerr << "         [-identification ID]" << std::endl;
   std::cerr << "         [-analyze]" << std::endl;
-  std::cerr << "         [-printError] [-errorType MAE, W1MAE, W2MAE, RMSE, W1RMSE or W2RMSE]" << std::endl;
-  
+  std::cerr << "         [-printError] [-accuracyAtom] [-errorType MAE, W1MAE, W2MAE, W3MAE, W4MAE, RMSE, W1RMSE, W2RMSE, W3RMSE, W4RMSE]" << std::endl;
   std::cerr << std::endl;
   exit(0);
 }
@@ -61,6 +66,7 @@ int main (int argc, char **argv){
   bool startFlag=false;
   bool analyzeError=false;
   bool printError=false;
+  bool accuracyAtom=false;
   unsigned int itrj;
   std::ifstream trjin;
   Trajectory *ftrjin;
@@ -77,7 +83,7 @@ int main (int argc, char **argv){
   anin=NULL;
 //  verbose=false;
   fchemshift="";
-  identification="test";
+  identification="FOO";
   errorType="RMSE";
 
   for (i=1; i<argc; i++){
@@ -114,16 +120,16 @@ int main (int argc, char **argv){
     else if (currArg.compare("-analyze") == 0 || currArg.compare("-a") == 0 ){
       analyzeError=true;
     }
-//    else if (currArg.compare("-verbose") == 0){
-//      verbose=true;
-//    }
     else if (currArg.compare("-printError") == 0 || currArg.compare("-p") == 0 ){
       printError=true;
+    }
+    else if (currArg.compare("-accuracyAtom") == 0 || currArg.compare("-p") == 0 ){
+      accuracyAtom=true;
     }
     else if (currArg.compare("-errorType") == 0 || currArg.compare("-e") == 0 ){
       currArg=argv[++i];
       errorType=Misc::toupper(currArg);
-      if(errorType != "MAE" && errorType != "RMSE" && errorType != "W1MAE" && errorType != "W1RMSE" && errorType != "W2MAE" && errorType != "W2RMSE"){
+      if(errorType != "MAE" && errorType != "RMSE" && errorType != "W1MAE" && errorType != "W1RMSE" && errorType != "W2MAE" && errorType != "W2RMSE" && errorType != "W3MAE" && errorType != "W3RMSE" && errorType != "W4MAE" && errorType != "W4RMSE"){
         std::cerr << "-errorType: must be either MAE,W1MAE,W2MAE,RMSE,W1RMSE or W2RMSE" << std::endl;
         exit(0);
       }
@@ -141,9 +147,12 @@ int main (int argc, char **argv){
     usage();
   }
 
-
   Molecule *mol=NULL;
+  LARMORCA *larm=NULL;
+  larm=new LARMORCA(fchemshift);
   anin=new AnalyzeLarmorca;
+  //std::cout << larm->getRandomShift("H:ALA") << std::endl;
+  
 
   if (trajs.size() > 0){
     if (pdbs.size() > 1){
@@ -154,7 +163,6 @@ int main (int argc, char **argv){
     anin->addSel(":.CA");
     mol=Molecule::readPDB(pdbs.at(0));
     anin->preAnalysis(mol, "");
-    
     /* Process trajectories */
     for (itrj=0; itrj< trajs.size(); itrj++){
       trjin.open(trajs.at(itrj).c_str(), std::ios::binary);
@@ -175,7 +183,7 @@ int main (int argc, char **argv){
             nframe++;
             anin->clearMol();
             anin->preAnalysis(mol, "");
-            anin->runAnalysisTest(nframe,fchemshift,identification,analyzeError,printError,errorType);
+            anin->runAnalysisTest(larm,nframe,fchemshift,identification,analyzeError,printError,errorType,accuracyAtom);
           }
         }
         else{
@@ -189,13 +197,13 @@ int main (int argc, char **argv){
       trjin.close();
     }
   }
-  else { 
+  else {     
     Molecule *mol=NULL;
       for (j=0; j< pdbs.size(); j++){
         mol=Molecule::readPDB(pdbs.at(j));
         anin->addSel(":.CA");
-        anin->preAnalysis(mol, "");
-        anin->runAnalysisTest(j+1,fchemshift,identification,analyzeError,printError,errorType);
+        anin->preAnalysis(mol, "");        
+        anin->runAnalysisTest(larm,j+1,fchemshift,identification,analyzeError,printError,errorType,accuracyAtom);
         delete mol;
       }
       if (anin != NULL){

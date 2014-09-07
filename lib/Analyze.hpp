@@ -22,6 +22,7 @@ along with MoleTools.  If not, see <http://www.gnu.org/licenses/>.
 #define ANALYZE_H
 
 #include "Enum.hpp"
+#include "LARMORCA.hpp"
 #include <vector>
 #include <string>
 
@@ -161,7 +162,7 @@ class AnalyzeLarmorca: public Analyze {
     AnalyzeLarmorca(std::string delim=":");
     void preAnalysis(Molecule* molin, std::string fin="");
     void runAnalysis();
-    void runAnalysisTest(unsigned int frame=1, std::string fchemshift="", std::string identification="test", bool analyzeError=false, bool printError=false, std::string errorType="RMSE");
+    void runAnalysisTest(LARMORCA* larm, unsigned int frame=1, std::string fchemshift="", std::string identification="test", bool analyzeError=false, bool printError=false, std::string errorType="RMSE", bool accuracyAtom=false);
 };
 
 
