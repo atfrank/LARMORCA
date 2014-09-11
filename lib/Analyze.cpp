@@ -28,6 +28,7 @@ along with MoleTools.  If not, see <http://www.gnu.org/licenses/>.
 #include "DTree.hpp"
 #include "PCASSO.hpp"
 #include "LARMORCAP.hpp"
+#include "LARMORCAPFULL.hpp"
 #include "LARMORCA.hpp"
 #include "Misc.hpp"
 
@@ -69,7 +70,7 @@ AnalyzePcasso::AnalyzePcasso (std::string delim){
   }
 }
 
-AnalyzeLarmorca::AnalyzeLarmorca (std::string delim){
+AnalyzeLarmorca::AnalyzeLarmorca (std::string delim, std::string runmode){
   unsigned int ntree;
   /* Tree - Nucleus
   t1 - H
@@ -97,35 +98,67 @@ AnalyzeLarmorca::AnalyzeLarmorca (std::string delim){
   t6.resize(ntree);
   
   for (unsigned int i=0; i< ntree; i++){
-    t1.at(i)=new DTree;
-    Misc::splitStr(LARMORCAP::getTree(i, "H"), " \t", tokens, false);
-    t1.at(i)->genDTree(tokens, delim);
-    //tokens.clear();
+    if(runmode=="train"){
+        t1.at(i)=new DTree;
+        Misc::splitStr(LARMORCAP::getTree(i, "H"), " \t", tokens, false);
+        t1.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
 
-    t2.at(i)=new DTree;
-    Misc::splitStr(LARMORCAP::getTree(i, "HA"), " \t", tokens, false);
-    t2.at(i)->genDTree(tokens, delim);
-    //tokens.clear();
+        t2.at(i)=new DTree;
+        Misc::splitStr(LARMORCAP::getTree(i, "HA"), " \t", tokens, false);
+        t2.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
 
-    t3.at(i)=new DTree;
-    Misc::splitStr(LARMORCAP::getTree(i, "CA"), " \t", tokens, false);
-    t3.at(i)->genDTree(tokens, delim);
-    //tokens.clear();
+        t3.at(i)=new DTree;
+        Misc::splitStr(LARMORCAP::getTree(i, "CA"), " \t", tokens, false);
+        t3.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
 
-    t4.at(i)=new DTree;
-    Misc::splitStr(LARMORCAP::getTree(i, "C"), " \t", tokens, false);
-    t4.at(i)->genDTree(tokens, delim);
-    //tokens.clear();
+        t4.at(i)=new DTree;
+        Misc::splitStr(LARMORCAP::getTree(i, "C"), " \t", tokens, false);
+        t4.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
 
-    t5.at(i)=new DTree;
-    Misc::splitStr(LARMORCAP::getTree(i, "CB"), " \t", tokens, false);
-    t5.at(i)->genDTree(tokens, delim);
-    //tokens.clear();
+        t5.at(i)=new DTree;
+        Misc::splitStr(LARMORCAP::getTree(i, "CB"), " \t", tokens, false);
+        t5.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
     
-    t6.at(i)=new DTree;
-    Misc::splitStr(LARMORCAP::getTree(i, "N"), " \t", tokens, false);
-    t6.at(i)->genDTree(tokens, delim);
-    //tokens.clear();
+        t6.at(i)=new DTree;
+        Misc::splitStr(LARMORCAP::getTree(i, "N"), " \t", tokens, false);
+        t6.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+    } else {
+        t1.at(i)=new DTree;
+        Misc::splitStr(LARMORCAPFULL::getTree(i, "H"), " \t", tokens, false);
+        t1.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+
+        t2.at(i)=new DTree;
+        Misc::splitStr(LARMORCAPFULL::getTree(i, "HA"), " \t", tokens, false);
+        t2.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+
+        t3.at(i)=new DTree;
+        Misc::splitStr(LARMORCAPFULL::getTree(i, "CA"), " \t", tokens, false);
+        t3.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+
+        t4.at(i)=new DTree;
+        Misc::splitStr(LARMORCAPFULL::getTree(i, "C"), " \t", tokens, false);
+        t4.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+
+        t5.at(i)=new DTree;
+        Misc::splitStr(LARMORCAPFULL::getTree(i, "CB"), " \t", tokens, false);
+        t5.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+    
+        t6.at(i)=new DTree;
+        Misc::splitStr(LARMORCAPFULL::getTree(i, "N"), " \t", tokens, false);
+        t6.at(i)->genDTree(tokens, delim);
+        //tokens.clear();
+    }
   }
 }
 
@@ -567,7 +600,7 @@ void AnalyzePcasso::runAnalysis(){
 void AnalyzeLarmorca::runAnalysis(){
 }
 
-void AnalyzeLarmorca::runAnalysisTest(LARMORCA* larm, unsigned int frame, std::string fchemshift, std::string identification, bool analyzeError, bool printError,std::string errorType, bool accuracyAtom){
+void AnalyzeLarmorca::runAnalysisTest(LARMORCA* larm, unsigned int frame, std::string fchemshift, std::string identification, bool analyzeError, bool printError,std::string errorType, bool accuracyAtom, std::string runmode){
   Molecule *mol;
   Molecule *mol1;
   Molecule *mol2;
@@ -676,7 +709,11 @@ void AnalyzeLarmorca::runAnalysisTest(LARMORCA* larm, unsigned int frame, std::s
   //larm = new LARMORCA(fchemshift);
   natom=0;
   
-  ntree=LARMORCAP::getNTree();
+  if (runmode=="train"){
+    ntree=LARMORCAP::getNTree();
+  } else {
+    ntree=LARMORCAPFULL::getNTree();
+  }
   for (unsigned int i=0; i< mol->getNAtomSelected(); i++){
     p1=p2=p3=p4=p5=p6=0.0;
     resname = mol->getResidue(natom)->getResName();
