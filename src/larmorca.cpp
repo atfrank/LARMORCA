@@ -178,11 +178,8 @@ int main (int argc, char **argv){
 
   Molecule *mol=NULL;
   LARMORCA *larm=NULL;
-  return 0;
   larm=new LARMORCA(fchemshift);
   anin=new AnalyzeLarmorca(":",predictorType);
-  //std::cout << larm->getRandomShift("H:ALA") << std::endl;
-  
 
   if (trajs.size() > 0){
     if (pdbs.size() > 1){
@@ -227,14 +224,15 @@ int main (int argc, char **argv){
       trjin.close();
     }
   }
-  else {     
+  else {
     Molecule *mol=NULL;
       for (j=0; j< pdbs.size(); j++){
         mol=Molecule::readPDB(pdbs.at(j));
         anin->addSel(":.CA");
-        anin->preAnalysis(mol, "");        
+        anin->preAnalysis(mol, "");
         anin->runAnalysisTest(larm,j+1,fchemshift,identification,analyzeError,printError,errorType,accuracyAtom,predictorType);
-        delete mol;
+        mol->zeroCoor();
+        //delete mol;
       }
       if (anin != NULL){
         delete anin;
