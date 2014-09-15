@@ -36,7 +36,7 @@ Compiled Using: g++ larmorca.cpp -o larmorca -Wall -O3 -I$MoleTools/lib -lmoleto
 void usage(){
   std::cerr << " " << std::endl;
   std::cerr << "====================================================" << std::endl;
-  std::cerr << "LARMORCa Chemical Shift Predictor v1.00" << std::endl;
+  std::cerr << "LARMORCα Chemical Shift Predictor v1.00" << std::endl;
   std::cerr << "(c) 2014 Aaron T. Frank and University of Michigan." << std::endl;
   std::cerr << "====================================================" << std::endl;
   std::cerr << " " << std::endl;
