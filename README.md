@@ -36,6 +36,27 @@ $ # predict chemical shifts from a trajectory file (DCD format)
 $ bin/larmorca -csfile tests/cs.dat -identification ID -trj tests/file.dcd tests/file.pdb
 ```
 
+## Chemical shift list file
+### file format
+_residue-name, residue-number, nucleus, measured-shifts, error_
+
+### example
+```shell
+$ head -10 tests/cs.dat
+  
+  MET 1 C 170.2 0
+  MET 1 CA 53.3 0
+  MET 1 HA 3.73 0
+  ASN 2 C 174.3 0
+  ASN 2 CA 51.7 0
+  ASN 2 HA 4.28 0
+  ASN 2 H 6.88 0
+  ASN 2 N 115.7 0
+  ILE 3 C 174.9 0
+  ILE 3 CA 64.1 0
+  ...
+```
+
 ## output (chemical shifts)
 ### format
 _trajectory-frame, residue-number, residue-name, nucleus, reference-shifts, predicted-shifts, measured-shifts, id-tag_
@@ -107,27 +128,6 @@ $ bin/larmorca -csfile tests/cs.dat -identification ID -printError -errorType MA
   10 1.65376 0.303159 1.82448 1.31903 0 2.78786 7.8883 ID
   11 1.38815 0.278989 1.58481 1.23251 0 2.75756 7.24201 ID
   12 1.57407 0.261466 1.32346 1.08008 0 2.52171 6.7608 ID
-  ...
-```
-
-## Chemical shift list file
-### file format
-_residue-name, residue-number, nucleus, measured-shifts, error_
-
-### example
-```shell
-$ head -10 tests/cs.dat
-  
-  MET 1 C 170.2 0
-  MET 1 CA 53.3 0
-  MET 1 HA 3.73 0
-  ASN 2 C 174.3 0
-  ASN 2 CA 51.7 0
-  ASN 2 HA 4.28 0
-  ASN 2 H 6.88 0
-  ASN 2 N 115.7 0
-  ILE 3 C 174.9 0
-  ILE 3 CA 64.1 0
   ...
 ```
 
