@@ -118,19 +118,19 @@ double LARMORCA::getExperimentalCS(const std::string &key){
 }
 
 void LARMORCA::initializeExpectedAccuracy(){
-    this->accuracyMAE.insert(std::pair<std::string,double>("C",0.929));
-    this->accuracyMAE.insert(std::pair<std::string,double>("CA",1.097));
-    this->accuracyMAE.insert(std::pair<std::string,double>("CB",1.607));
-    this->accuracyMAE.insert(std::pair<std::string,double>("H",0.408));
-    this->accuracyMAE.insert(std::pair<std::string,double>("HA",0.256));
-    this->accuracyMAE.insert(std::pair<std::string,double>("N",2.574));
+    this->accuracyMAE.insert(std::pair<std::string,double>("C",0.80865476891));
+    this->accuracyMAE.insert(std::pair<std::string,double>("CA",0.778732809475));
+    this->accuracyMAE.insert(std::pair<std::string,double>("CB",0.90003855146));
+    this->accuracyMAE.insert(std::pair<std::string,double>("H",0.354952289487));
+    this->accuracyMAE.insert(std::pair<std::string,double>("HA",0.21464898458));
+    this->accuracyMAE.insert(std::pair<std::string,double>("N",2.09014624877));
 
-    this->accuracyR.insert(std::pair<std::string,double>("C",0.817));
-    this->accuracyR.insert(std::pair<std::string,double>("CA",0.928));
-    this->accuracyR.insert(std::pair<std::string,double>("CB",0.944));
-    this->accuracyR.insert(std::pair<std::string,double>("H",0.648));
-    this->accuracyR.insert(std::pair<std::string,double>("HA",0.750));
-    this->accuracyR.insert(std::pair<std::string,double>("N",0.792));
+    this->accuracyR.insert(std::pair<std::string,double>("C",0.86521888325));
+    this->accuracyR.insert(std::pair<std::string,double>("CA",0.973252050194));
+    this->accuracyR.insert(std::pair<std::string,double>("CB",0.994311060859));
+    this->accuracyR.insert(std::pair<std::string,double>("H",0.728829710114));
+    this->accuracyR.insert(std::pair<std::string,double>("HA",0.837299238494));
+    this->accuracyR.insert(std::pair<std::string,double>("N",0.859625965583));
 
     this->accuracySD.insert(std::pair<std::string,double>("C",1.108));
     this->accuracySD.insert(std::pair<std::string,double>("CA",1.095));
