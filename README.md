@@ -17,7 +17,6 @@ Usage: larmorca [-options] <PDBfile>
 
 Options:
          -csfile : chemical shifts list file (string)
-         -parmfile : LarmorCa parameter file (string)
          -trj : trajectory file (string)
          -skip : skip rate for reading trajectory (integer)
          -start : frame at which to start reading trajectory (integer)
