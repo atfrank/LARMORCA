@@ -1,10 +1,11 @@
 # LarmorCa: Protein Ca-based Chemical Shift Predictor
  
-- Predicts Backbone Protein (HN, N, C, HA, CA, CB) RNA chemical shifts
+- Predicts Backbone Protein (HN, N, C, HA, CA, CB) chemical shifts
+- Predictors were generated using the Random Forest machine learning technique
 
 ## Install
 ```shell
-$ cd /path/to/LarmorCa/
+$ cd /path/to/LARMORCA/
 $ make clean
 $ make 
 ```
