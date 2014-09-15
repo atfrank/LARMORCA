@@ -47,7 +47,7 @@ void usage(){
   std::cerr << "         [-skip frames] [-start frame] [-stop frame]" << std::endl;  
   std::cerr << "         [-identification ID]" << std::endl;
   std::cerr << "         [-runmode]" << std::endl;
-  std::cerr << "         [-printError] [-accuracyAtom] [-errorType MAE, W1MAE, W2MAE, RMSE, W1RMSE, W2RMSE]" << std::endl;
+  std::cerr << "         [-printError] [-errorType MAE, WMAE, RMSE, WRMSE]" << std::endl;
   std::cerr << std::endl;
   exit(0);
 }
@@ -145,9 +145,22 @@ int main (int argc, char **argv){
     else if (currArg.compare("-errorType") == 0 || currArg.compare("-e") == 0 ){
       currArg=argv[++i];
       errorType=Misc::toupper(currArg);
-      if(errorType != "MAE" && errorType != "RMSE" && errorType != "W1MAE" && errorType != "W1RMSE" && errorType != "W2MAE" && errorType != "W2RMSE" && errorType != "W3MAE" && errorType != "W3RMSE" && errorType != "W4MAE" && errorType != "W4RMSE"){
-        std::cerr << "-errorType: must be either MAE,W1MAE,W2MAE,RMSE,W1RMSE or W2RMSE" << std::endl;
+      if (printError==false){
+        std::cerr << "Error: -errorType only valid when using -printError  " << std::endl;
         exit(0);
+      } else {
+         if(errorType != "MAE" && errorType != "RMSE" && errorType != "WMAE" && errorType != "WRMSE"){
+           std::cerr << "-errorType: must be either MAE,WMAE,RMSE or WRMSE" << std::endl;
+           exit(0);
+         } else if (errorType == "WMAE"){
+           errorType = "W2MAE";
+         } else if (errorType == "W2RMSE"){
+           errorType = "W2RMSE";
+         }
+         //if(errorType != "MAE" && errorType != "RMSE" && errorType != "W1MAE" && errorType != "W1RMSE" && errorType != "W2MAE" && errorType != "W2RMSE" && errorType != "W3MAE" && errorType != "W3RMSE" && errorType != "W4MAE" && errorType != "W4RMSE"){
+         //  std::cerr << "-errorType: must be either MAE,W1MAE,W2MAE,RMSE,W1RMSE or W2RMSE" << std::endl;
+         //  exit(0);
+         //}
       }
     } 
     else if (currArg.compare(0,1,"-") == 0){

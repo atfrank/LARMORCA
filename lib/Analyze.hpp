@@ -159,10 +159,10 @@ class AnalyzeLarmorca: public Analyze {
     std::vector<DTree *> t5;
     std::vector<DTree *> t6;
   public:
-    AnalyzeLarmorca(std::string delim=":",std::string runmode="train");
+    AnalyzeLarmorca(std::string delim=":",std::string predictorType="train");
     void preAnalysis(Molecule* molin, std::string fin="");
     void runAnalysis();
-    void runAnalysisTest(LARMORCA* larm, unsigned int frame=1, std::string fchemshift="", std::string identification="test", bool analyzeError=false, bool printError=false, std::string errorType="RMSE", bool accuracyAtom=false, std::string runmode="train");
+    void runAnalysisTest(LARMORCA* larm, unsigned int frame=1, std::string fchemshift="", std::string identification="test", bool analyzeError=false, bool printError=false, std::string errorType="RMSE", bool accuracyAtom=false, std::string predictorType="train");
 };
 
 

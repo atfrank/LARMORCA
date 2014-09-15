@@ -22,7 +22,9 @@ Options:
          -start : frame at which to start reading trajectory (integer)
          -stop : frame at which to stop reading trajectoryframe (integer)
          -identification : ID tag used in output (string)
+         -predictorType: which predictors to use; training or full (string: "train" or "full")
          -printError : output errors, rather than chemical shifts (flag)
+         -errorType: error type to use (string: "MAE", "RMSE", "wMAE", or "wRMSE")
 
 ```
 

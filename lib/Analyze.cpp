@@ -70,7 +70,7 @@ AnalyzePcasso::AnalyzePcasso (std::string delim){
   }
 }
 
-AnalyzeLarmorca::AnalyzeLarmorca (std::string delim, std::string runmode){
+AnalyzeLarmorca::AnalyzeLarmorca (std::string delim, std::string predictorType){
   unsigned int ntree;
   /* Tree - Nucleus
   t1 - H
@@ -98,7 +98,7 @@ AnalyzeLarmorca::AnalyzeLarmorca (std::string delim, std::string runmode){
   t6.resize(ntree);
   
   for (unsigned int i=0; i< ntree; i++){
-    if(runmode=="train"){
+    if(predictorType=="train"){
         t1.at(i)=new DTree;
         Misc::splitStr(LARMORCAP::getTree(i, "H"), " \t", tokens, false);
         t1.at(i)->genDTree(tokens, delim);
@@ -600,7 +600,7 @@ void AnalyzePcasso::runAnalysis(){
 void AnalyzeLarmorca::runAnalysis(){
 }
 
-void AnalyzeLarmorca::runAnalysisTest(LARMORCA* larm, unsigned int frame, std::string fchemshift, std::string identification, bool analyzeError, bool printError,std::string errorType, bool accuracyAtom, std::string runmode){
+void AnalyzeLarmorca::runAnalysisTest(LARMORCA* larm, unsigned int frame, std::string fchemshift, std::string identification, bool analyzeError, bool printError,std::string errorType, bool accuracyAtom, std::string predictorType){
   Molecule *mol;
   Molecule *mol1;
   Molecule *mol2;
@@ -709,7 +709,7 @@ void AnalyzeLarmorca::runAnalysisTest(LARMORCA* larm, unsigned int frame, std::s
   //larm = new LARMORCA(fchemshift);
   natom=0;
   
-  if (runmode=="train"){
+  if (predictorType=="train"){
     ntree=LARMORCAP::getNTree();
   } else {
     ntree=LARMORCAPFULL::getNTree();
