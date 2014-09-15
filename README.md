@@ -32,8 +32,16 @@ Options:
 ```shell
 $ # predict chemical shifts from a coordinate file 
 $ bin/larmorca -csfile tests/cs.dat -identification ID tests/file.pdb (PDB format)
+$
 $ # predict chemical shifts from a trajectory file (DCD format) 
 $ bin/larmorca -csfile tests/cs.dat -identification ID -trj tests/file.dcd tests/file.pdb
+$
+$ # predict chemical shifts using the model trained on only RefDB training set
+$ bin/larmorca -csfile tests/cs.dat -identification ID -predictorType train -trj tests/file.dcd tests/file.pdb
+$
+$ # predict chemical shifts using the model trained on the entire RefDB
+$ bin/larmorca -csfile tests/cs.dat -identification ID -predictorType full -trj tests/file.dcd tests/file.pdb
+
 ```
 
 ## Chemical shift list file
