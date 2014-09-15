@@ -36,13 +36,13 @@ $ # predict chemical shifts from a trajectory file (DCD format)
 $ bin/larmorca -csfile tests/cs.dat -identification ID -trj tests/file.dcd tests/file.pdb
 ```
 
-## output
+## output (chemical shifts)
 ### format
 _trajectory-frame, residue-number, residue-name, nucleus, reference-shifts, predicted-shifts, measured-shifts, id-tag_
 
 ### example
 ```shell
-$ bin/larmorca -csfile tests/cs.dat -identification 1SCL tests/struct.pdb
+$ bin/larmorca -csfile tests/cs.dat -identification ID tests/file.pdb
   
   1 1 HA MET 4.48 4.53644 3.73 ID
   1 1 CA MET 55.4 54.94 53.3 ID
@@ -84,6 +84,29 @@ $ bin/larmorca -csfile tests/cs.dat -identification 1SCL tests/struct.pdb
   1 10 CA ASP 54.2 56.5941 57.8 ID
   1 10 C ASP 176.3 177.661 177.3 ID
   1 10 N ASP 120.4 117.88 117.7 ID
+  ...
+```
+
+## output (errors)
+### format
+_trajectory-frame, error-HN, error-Hα, error-Cα, error-C, error-Cβ, error-N, error-total, id-tag_
+
+### example
+```shell
+$ bin/larmorca -csfile tests/cs.dat -identification ID -printError -errorType MAE -trj tests/file.dcd tests/file.pdb 
+  
+  1 1.41216 0.22443 0.863814 0.923743 0 2.46342 5.88757 ID
+  2 1.49718 0.298723 1.68938 1.25538 0 2.67265 7.41332 ID
+  3 1.47061 0.279231 1.69115 1.24907 0 2.90211 7.59217 ID
+  4 1.50804 0.295767 1.59486 1.24795 0 2.7518 7.39842 ID
+  5 1.44317 0.287217 1.59268 1.19073 0 2.66489 7.17869 ID
+  6 1.57143 0.280846 1.61944 1.23007 0 2.68759 7.38938 ID
+  7 1.53636 0.286255 1.51561 1.18623 0 2.68117 7.20563 ID
+  8 1.40482 0.306484 1.6368 1.25667 0 2.77738 7.38215 ID
+  9 1.49456 0.296307 1.60117 1.19395 0 2.7616 7.34758 ID
+  10 1.65376 0.303159 1.82448 1.31903 0 2.78786 7.8883 ID
+  11 1.38815 0.278989 1.58481 1.23251 0 2.75756 7.24201 ID
+  12 1.57407 0.261466 1.32346 1.08008 0 2.52171 6.7608 ID
   ...
 ```
 
