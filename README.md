@@ -24,46 +24,66 @@ Options:
          -identification : ID tag used in output (string)
          -predictorType: which predictors to use; training or full (string: "train" or "full")
          -printError : output errors, rather than chemical shifts (flag)
-         -errorType: error type to use (string: "MAE", "RMSE", "wMAE", or "wRMSE")
+         -errorType: if -printError, this specifies type of error to compute (string: "MAE", "RMSE", "wMAE", or "wRMSE")
 
 ```
 
 ## Examples
 ```shell
 $ # predict chemical shifts from a coordinate file 
-$ bin/larmorca -csfile tests/cs.dat -identification 1SCL tests/struct.pdb (PDB format)
+$ bin/larmorca -csfile tests/cs.dat -identification ID tests/file.pdb (PDB format)
 $ # predict chemical shifts from a trajectory file (DCD format) 
-$ bin/larmorca -csfile tests/cs.dat -identification 1SCL -trj tests/pool.dcd tests/struct.pdb
+$ bin/larmorca -csfile tests/cs.dat -identification ID -trj tests/file.dcd tests/file.pdb
 ```
 
 ## output
 ### format
-_processor, trajectory-frame, residue-number, residue-name, nucleus, predicted-shifts, measured-shifts, random-coil-shifts, id-tag_
+_trajectory-frame, residue-number, residue-name, nucleus, reference-shifts, predicted-shifts, measured-shifts, id-tag_
 
 ### example
 ```shell
 $ bin/larmorca -csfile tests/cs.dat -identification 1SCL tests/struct.pdb
   
-  0 1 1 GUA C4' 83.3042 80.854 83.1 1SCL
-  0 1 1 GUA H4' 4.46852 4.533 4 1SCL
-  0 1 1 GUA C1' 91.9503 89.246 93.1 1SCL
-  0 1 1 GUA H1' 5.73867 5.826 5.05 1SCL
-  0 1 1 GUA C8 139.384 136.761 137.9 1SCL
-  0 1 1 GUA H8 7.88394 8.154 7.69 1SCL
-  0 1 1 GUA C3' 74.5986 72.559 73.9 1SCL
-  0 1 1 GUA H3' 4.58187 4.927 4.14 1SCL
-  0 1 1 GUA C2' 75.7191 72.732 76.3 1SCL
-  0 1 1 GUA H2' 4.60956 4.467 4.02 1SCL
-  0 1 2 GUA C4' 82.4796 79.711 83.1 1SCL
-  0 1 2 GUA H4' 4.4962 4.548 4 1SCL
-  0 1 2 GUA C1' 92.4939 90.258 93.1 1SCL
-  0 1 2 GUA H1' 5.7539 5.932 5.05 1SCL
-  0 1 2 GUA C8 137.111 134.495 137.9 1SCL
-  0 1 2 GUA H8 7.4922 7.556 7.69 1SCL
-  0 1 2 GUA C3' 73.1824 70.475 73.9 1SCL
-  0 1 2 GUA H3' 4.57466 4.559 4.14 1SCL
-  0 1 2 GUA C2' 75.5983 72.954 76.3 1SCL
-  0 1 2 GUA H2' 4.67613 4.718 4.02 1SCL
+1 1 HA MET 4.48 4.53644 3.73 ID
+1 1 CA MET 55.4 54.94 53.3 ID
+1 1 C MET 173.6 174.172 170.2 ID
+1 2 H ASN 8.4 8.47179 6.88 ID
+1 2 HA ASN 4.74 4.73207 4.28 ID
+1 2 CA ASN 53.1 52.0674 51.7 ID
+1 2 C ASN 175.2 175.192 174.3 ID
+1 2 N ASN 118.7 122.102 115.7 ID
+1 3 HA ILE 4.17 3.80757 4 ID
+1 3 CA ILE 61.1 63.1395 64.1 ID
+1 3 C ILE 176.4 177.449 174.9 ID
+1 3 N ILE 119.9 119.898 117.4 ID
+1 4 HA PHE 4.62 4.22713 3.6 ID
+1 4 CA PHE 57.7 60.0242 61 ID
+1 4 C PHE 175.8 177.382 176.3 ID
+1 4 N PHE 120.3 118.762 122.9 ID
+1 5 HA GLU 4.35 4.0578 3.63 ID
+1 5 CA GLU 56.6 58.7379 58.1 ID
+1 5 C GLU 176.6 178.694 178.3 ID
+1 5 N GLU 120.2 118.591 117.7 ID
+1 6 HA MET 4.48 4.02625 3.24 ID
+1 6 CA MET 55.4 57.9186 58.7 ID
+1 6 C MET 173.6 177.884 177 ID
+1 6 N MET 119.6 119.895 118.2 ID
+1 7 HA LEU 4.34 3.9542 3.95 ID
+1 7 CA LEU 55.1 57.3532 56 ID
+1 7 C LEU 177.6 178.538 178.9 ID
+1 7 N LEU 121.8 118.766 118.5 ID
+1 8 HA ARG 4.34 3.91707 3.3 ID
+1 8 CA ARG 56 59.4871 60.2 ID
+1 8 C ARG 176.3 178.189 178.8 ID
+1 8 N ARG 120.5 119.398 123.8 ID
+1 9 HA ILE 4.17 3.69591 3.49 ID
+1 9 CA ILE 61.1 64.2022 65 ID
+1 9 C ILE 176.4 178.337 177.7 ID
+1 9 N ILE 119.9 118.095 119.7 ID
+1 10 HA ASP 4.64 4.45631 4.49 ID
+1 10 CA ASP 54.2 56.5941 57.8 ID
+1 10 C ASP 176.3 177.661 177.3 ID
+1 10 N ASP 120.4 117.88 117.7 ID
   ...
 ```
 
