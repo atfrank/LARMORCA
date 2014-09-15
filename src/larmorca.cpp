@@ -178,6 +178,7 @@ int main (int argc, char **argv){
 
   Molecule *mol=NULL;
   LARMORCA *larm=NULL;
+  return 0;
   larm=new LARMORCA(fchemshift);
   anin=new AnalyzeLarmorca(":",predictorType);
   //std::cout << larm->getRandomShift("H:ALA") << std::endl;
