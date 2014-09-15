@@ -131,7 +131,13 @@ int main (int argc, char **argv){
       }
     }
     else if (currArg.compare("-printError") == 0 || currArg.compare("-p") == 0 ){
-      printError=true;
+        if(fchemshift.length() > 0){
+            printError=true;
+        } else {
+            std::cerr << "Warning: -printError ignored" << std::endl;
+            std::cerr << "Warning: -printError is valid only when a chemical shifts data file is suppled via --csfile " << std::endl;
+            printError=false;
+        }
     }
     else if (currArg.compare("-accuracyAtom") == 0 || currArg.compare("-acc") == 0 ){
       accuracyAtom=true;

@@ -22,6 +22,7 @@ Options:
          -start : frame at which to start reading trajectory (integer)
          -stop : frame at which to stop reading trajectoryframe (integer)
          -identification : ID tag used in output (string)
+         -printError : output errors, rather than chemical shifts (flag)
 
 ```
 
