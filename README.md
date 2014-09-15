@@ -1,4 +1,4 @@
-# LarmorCa: Protein Ca-based Chemical Shift Predictor
+# LarmorCα: Protein Cα-based Chemical Shift Predictor
  
 - Predicts Backbone Protein (HN, N, C, HA, CA, CB) chemical shifts
 - Predictors were generated using the Random Forest machine learning technique
